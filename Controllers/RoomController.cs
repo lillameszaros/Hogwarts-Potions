@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using HogwartsPotions.Models;
 using HogwartsPotions.Models.Entities;
+using HogwartsPotions.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HogwartsPotions.Controllers
@@ -9,47 +11,48 @@ namespace HogwartsPotions.Controllers
     [ApiController, Route("/room")]
     public class RoomController : ControllerBase
     {
-        private readonly HogwartsContext _context;
+        private readonly IRoomService _service;
 
-        public RoomController(HogwartsContext context)
+        public RoomController(IRoomService service)
         {
-            _context = context;
+            _service = service;
         }
 
         [HttpGet]
         public async Task<List<Room>> GetAllRooms()
         {
-            return await _context.GetAllRooms();
+            return await _service.GetAllRooms();
+
         }
 
         [HttpPost]
-        public async  Task AddRoom([FromBody] Room room)
+        public async Task AddRoom([FromBody] Room room)
         {
-            await _context.AddRoom(room);
+            await _service.AddRoom(room);
         }
 
-        [HttpGet("/{id}")]
+        [HttpGet("{id}")]
         public async Task<Room> GetRoomById(long id)
         {
-            return await _context.GetRoom(id);
+            return await _service.GetRoom(id);
         }
 
-        [HttpPut("/{id}")]
-        public void UpdateRoomById(long id, [FromBody] Room updatedRoom)
+        [HttpPut("{id}")]
+        public async void UpdateRoomById(long id, [FromBody] Room updatedRoom)
         {
-            _context.Update(updatedRoom);
+            await _service.UpdateRoom(updatedRoom);
         }
 
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task DeleteRoomById(long id)
         {
-            await _context.DeleteRoom(id);
+            await _service.DeleteRoom(id);
         }
 
-        [HttpGet("/rat-owners")]
+        [HttpGet("rat-owners")]
         public async Task<List<Room>> GetRoomsForRatOwners()
         {
-            return await _context.GetRoomsForRatOwners();
+            return await _service.GetRoomsForRatOwners();
         }
     }
 }

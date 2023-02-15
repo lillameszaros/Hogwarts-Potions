@@ -1,4 +1,7 @@
+using System.Text.Json.Serialization;
 using HogwartsPotions.Models;
+using HogwartsPotions.Services;
+using HogwartsPotions.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +26,19 @@ namespace HogwartsPotions
             services.AddDbContext<HogwartsContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddControllersWithViews();
+            services.AddDatabaseDeveloperPageExceptionFilter();
+            
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IPotionService, PotionService>();
+
+            services.AddControllersWithViews()
+                //fix this issue: System.Text.Json.JsonException: A possible object cycle was detected which is not supported. 
+                .AddNewtonsoftJson(options =>
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                );
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,9 +57,17 @@ namespace HogwartsPotions
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
+            app.UseSwaggerUI();
+
             app.UseRouting();
 
             app.UseAuthorization();
+
+            
 
             app.UseEndpoints(endpoints =>
             {

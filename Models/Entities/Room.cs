@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace HogwartsPotions.Models.Entities
 {
@@ -10,6 +11,6 @@ namespace HogwartsPotions.Models.Entities
 
         public int Capacity { get; set; }
 
-        public HashSet<Student> Residents { get; set; } = new HashSet<Student>();
+        public ICollection<Student> Residents { get; set; } = new HashSet<Student>();
     }
 }
