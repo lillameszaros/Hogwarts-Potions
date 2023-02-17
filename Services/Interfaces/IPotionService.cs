@@ -8,9 +8,17 @@ namespace HogwartsPotions.Services.Interfaces
     {
         Task<List<Potion>> GetAllPotion();
 
-        Task AddPotion(Potion potion);
+        Task <Potion>AddPotion(Potion potion);
+
+        Task<Potion> GetPotionById(long potionId);
 
         Task<List<Potion>> ExploredPotionsByStudent(int studentId);
+
+        Task <Potion>ExploratoryBrew(Potion potion);
+
+        Task<Potion> AddIngredientToPotion(int id, Ingredient ingredient);
+
+        Task<List<Recipe>> HelpBrew(long potionId);
 
         /*Task<Room> GetRoom(long roomId);
 

@@ -47,12 +47,26 @@ namespace HogwartsPotions.Data
                 HouseType = HouseType.Slytherin,
                 PetType = PetType.None
             };
+            Student student5 = new Student
+            {
+                Name = "Ginny Weasley",
+                HouseType = HouseType.Gryffindor,
+                PetType = PetType.Owl
+            };
+            Student student6 = new Student
+            {
+                Name = "Cho Chang",
+                HouseType = HouseType.Ravenclaw,
+                PetType = PetType.Rat
+            };
 
             context.Students.AddRange(
                 student1,
                 student2,
                 student3,
-                student4
+                student4,
+                student5, 
+                student6
             );
             context.SaveChanges();
 
@@ -60,13 +74,13 @@ namespace HogwartsPotions.Data
             Room gryffindorCommonRoom = new Room
             {
                 Capacity = 20,
-                Residents= new HashSet<Student> { student1, student2 }
+                Residents= new HashSet<Student> { student1, student2, student5 }
             };
 
             Room ravenclawCommonRoom = new Room
             {
                 Capacity = 15,
-                Residents = new HashSet<Student> { student3 }
+                Residents = new HashSet<Student> { student3, student6 }
             };
 
             Room roomOfRequirement = new Room
@@ -92,6 +106,12 @@ namespace HogwartsPotions.Data
             Ingredient seaweed = new Ingredient { Name = "Seaweed" };
             Ingredient dust = new Ingredient { Name = "Dust" };
             Ingredient nails = new Ingredient { Name = "Nails" };
+            Ingredient ratTail = new Ingredient { Name = "Rat tail" };
+            Ingredient powder = new Ingredient { Name = "Powder" };
+            Ingredient pigEar = new Ingredient { Name = "Pig Ear" };
+            Ingredient salt = new Ingredient { Name = "Salt" };
+            Ingredient root = new Ingredient { Name = "Root" };
+            Ingredient leaf = new Ingredient { Name = "Leaf" };
 
             context.Ingredients.AddRange(
                 catHair,
@@ -99,7 +119,13 @@ namespace HogwartsPotions.Data
                 seaweed,
                 dust,
                 cactus,
-                nails
+                nails, 
+                ratTail,
+                powder,
+                pigEar,
+                salt,
+                root,
+                leaf
                 );
             context.SaveChanges();
 
@@ -108,31 +134,32 @@ namespace HogwartsPotions.Data
                 return; // DB has been seeded
             }
 
-            Recipe recipe1 = new Recipe
+            Recipe strengthPotionRecipe = new Recipe
             {
                 Name = "Recipe 1",
-                Ingredients = new List<Ingredient> { unicornHorn, cactus },
+                Ingredients = new HashSet<Ingredient> { unicornHorn, cactus, ratTail, seaweed, powder },
                 Student = student4
             };
 
-            Recipe recipe2 = new Recipe
+            Recipe polyjuicePotionRecipe = new Recipe
             {
                 Name = "Recipe 2",
-                Ingredients = new List<Ingredient> { catHair, dust, unicornHorn },
+                Ingredients = new HashSet<Ingredient> { catHair, dust, unicornHorn, pigEar, salt },
                 Student = student2
             };
 
-            Recipe recipe3
+            Recipe felixFelicisRecipe
                 = new Recipe
             {
                 Name = "Recipe 3",
-                Ingredients = new List<Ingredient> { seaweed, nails },
+                Ingredients = new HashSet<Ingredient> { nails, cactus, seaweed, root, leaf },
                 Student = student1
             };
             context.Recipes.AddRange(
-                recipe1,
-                recipe2,
-                recipe3);
+                strengthPotionRecipe,
+                polyjuicePotionRecipe,
+                felixFelicisRecipe
+                );
             context.SaveChanges();
 
             if (context.Potions.Any())
@@ -140,31 +167,34 @@ namespace HogwartsPotions.Data
                 return; // DB has been seeded
             }
 
-            Potion strengthPotion = new Potion
+            Potion lunaPotion1 = new Potion
             {
-                Name = "Strength Potion",
-                Recipe = recipe1,
+                Name = "Luna's potion",
+                Recipe = strengthPotionRecipe,
                 Student = student3,
-                Ingredients = new List<Ingredient> { catHair, unicornHorn }
+                Ingredients = new HashSet<Ingredient> { catHair, unicornHorn },
+                BrewingStatus = BrewingStatus.Brew
             };
-            Potion polyjuice = new Potion
+            Potion hermionePotion1 = new Potion
             {
-                Name = "Polyjuice Potion",
-                Recipe = recipe2,
+                Name = "Hermione's potion",
+                Recipe = polyjuicePotionRecipe,
                 Student = student2,
-                Ingredients = new List<Ingredient> { catHair, dust }
+                Ingredients = new HashSet<Ingredient> { catHair, dust, unicornHorn, pigEar, salt },
+                BrewingStatus = BrewingStatus.Replica
             };
-            Potion felix = new Potion
+            Potion dracoPotion1 = new Potion
             {
-                Name = "Felix Felicis",
-                Recipe = recipe2,
+                Name = "Draco's Potion",
+                Recipe = felixFelicisRecipe,
                 Student = student4,
-                Ingredients = new List<Ingredient> { catHair, dust, cactus, seaweed, dust }
+                Ingredients = new HashSet<Ingredient> { catHair, dust, cactus, seaweed, dust },
+                BrewingStatus = BrewingStatus.Brew
             };
             context.Potions.AddRange(
-                strengthPotion,
-                felix,
-                polyjuice);
+                lunaPotion1,
+                hermionePotion1,
+                dracoPotion1);
             context.SaveChanges();
 
         }

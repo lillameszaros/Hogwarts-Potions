@@ -10,24 +10,14 @@ namespace HogwartsPotions.Models.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long ID { get; set; }
 
-        public string Name { get; set; }
+        public string Name { get; set; } = "Potion in progress";
 
         public Student Student { get; set; }
-        public ICollection<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+        public ICollection<Ingredient> Ingredients { get; set; } = new HashSet<Ingredient>();
 
         public BrewingStatus BrewingStatus { get; set; } = BrewingStatus.Brew;
 
         public Recipe Recipe { get; set; }
 
-
-
-        /*private void GetBrewingStatus()
-        {
-            if (Ingredients.Count < 5)
-            {
-                BrewingStatus = BrewingStatus.Brew;
-            }
-            else if()
-        }*/
     }
 }

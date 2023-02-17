@@ -39,6 +39,8 @@ namespace HogwartsPotions
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
+
+            services.AddAutoMapper(typeof(Startup).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,9 +68,7 @@ namespace HogwartsPotions
             app.UseRouting();
 
             app.UseAuthorization();
-
             
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

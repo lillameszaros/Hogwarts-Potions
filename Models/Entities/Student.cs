@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using HogwartsPotions.Models.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace HogwartsPotions.Models.Entities
 {
+    [Index(nameof(Name), IsUnique = true)]
     public class Student
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
