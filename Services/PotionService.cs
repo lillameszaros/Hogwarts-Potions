@@ -183,11 +183,17 @@ namespace HogwartsPotions.Services
             //check replica or discovery
             if (potionsIngredients.Count == 5)
             {
-                foreach (Recipe recipe in _context.Recipes)
+                var allRecipes = await _context.Recipes.Include(r => r.Ingredients).Include(r => r.Student)
+                    .ToListAsync();
+                foreach (Recipe recipe in allRecipes)
                 {
-                    if (potionsIngredients.OrderBy(i => i.Name) == recipe.Ingredients.OrderBy(i => i.Name))
+                    var potionIngredientNames = potion.Ingredients.Select(i => i.Name).OrderBy(name => name);
+                    var recipeIngredientNames = recipe.Ingredients.Select(i => i.Name).OrderBy(name => name);
+                    if (potionIngredientNames.SequenceEqual(recipeIngredientNames))
                     {
                         potion.BrewingStatus = BrewingStatus.Replica;
+                        potion.Name = $"{potion.Student.Name}'s replica";
+                        break;
                     }
                     else
                     {
@@ -207,7 +213,11 @@ namespace HogwartsPotions.Services
 
                 //to update the potion status and name
                 _context.Potions.Update(potion);
-                await _context.Recipes.AddAsync(potion.Recipe);
+                if (potion.BrewingStatus == BrewingStatus.Discovery)
+                {
+                    await _context.Recipes.AddAsync(potion.Recipe);
+                }
+                
                 await _context.SaveChangesAsync();
                 return potion;
             }
